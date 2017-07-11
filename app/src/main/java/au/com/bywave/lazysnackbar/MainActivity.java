@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         });
         snacky.type(Type.UPDATE);
         snacky.setDuration(Duration.SHORT);
-        snacky.setMessage("The quick brown fox jumps over the lazy dog.");
+        snacky.addMessage("The quick brown fox jumps over the lazy dog.");
         snacky.show();
     }
 

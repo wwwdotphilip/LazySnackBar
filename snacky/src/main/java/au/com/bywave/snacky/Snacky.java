@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import static au.com.bywave.snacky.R.layout.snacky;
 
 public class Snacky extends RelativeLayout {
@@ -32,7 +34,9 @@ public class Snacky extends RelativeLayout {
     private Handler handler;
     private Runnable runnable;
 
-    public interface Action{
+    private ArrayList<String> messageList = new ArrayList<>();
+
+    public interface Action {
         void onClick();
     }
 
@@ -54,17 +58,28 @@ public class Snacky extends RelativeLayout {
         init(context, null);
     }
 
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        Snacky<br/>
+     * <br/>
+     *
+     * <br/>
+
+     * @param context Applicaotin context
+     * @param viewById e.g. (ViewGroup) findViewById(android.R.id.content)
+     */
     public Snacky(Context context, ViewGroup viewById) {
         super(context);
         mInflater = LayoutInflater.from(context);
         init(context, viewById);
     }
 
-    public void init(Context context, ViewGroup viewGroup){
+    public void init(Context context, ViewGroup viewGroup) {
         mView = mInflater.inflate(snacky, this, true);
         parent = mView.findViewById(R.id.rlParent);
         parent.setVisibility(INVISIBLE);
-        parent.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
+        parent.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
         textView = mView.findViewById(R.id.tvText);
         textView.setTextColor(Color.WHITE);
         button = mView.findViewById(R.id.btnAction);
@@ -74,7 +89,7 @@ public class Snacky extends RelativeLayout {
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAction != null){
+                if (mAction != null) {
                     mAction.onClick();
                 }
             }
@@ -98,21 +113,71 @@ public class Snacky extends RelativeLayout {
         mView.animate().setDuration(0).translationY(65).start();
     }
 
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        addAction<br/>
+     * <br/>
+     * Add specific action for snackbar to perform when button is pressed.
+     * <br/>
+     *
+     * @param title  name of action
+     * @param action action to perform
+     */
     public void addAction(String title, Action action) {
         if (title != null) {
             button.setText(title);
             button.setVisibility(VISIBLE);
         }
-        if (action != null){
+        if (action != null) {
             mAction = action;
         }
     }
 
-    public void setTextColor(int color){
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        setTextColor<br/>
+     * <br/>
+     * Set text color for snackbar message
+     * <br/>
+     *
+     * @param color int
+     */
+    public void setTextColor(int color) {
         textView.setTextColor(color);
     }
 
-    public void setMessage(String message){
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        addMessage<br/>
+     * <br/>
+     * Add message to be displayed
+     * <br/>
+     *
+     * @param message String
+     */
+    public void addMessage(String message) {
+        messageList.add(message);
+        StringBuilder sBuilder = new StringBuilder();
+        for (String item : messageList) {
+            sBuilder.append(item).append("\t");
+        }
+        setMessage(sBuilder);
+    }
+
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        setMessage<br/>
+     * <br/>
+     * Place all messages inside textbox
+     * <br/>
+     *
+     * @param message String
+     */
+    private void setMessage(StringBuilder message) {
         textView.setText(message);
         textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         textView.setSingleLine(true);
@@ -120,18 +185,89 @@ public class Snacky extends RelativeLayout {
         textView.setSelected(true);
     }
 
-    public void setBackgroundColor(int color){
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        getMessages<br/>
+     * <br/>
+     * Get list of message from list
+     * <br/>
+     *
+     * @return ArrayList
+     */
+    public ArrayList<String> getMessages() {
+        return messageList;
+    }
+
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        removeMessage<br/>
+     * <br/>
+     * Get list of massage stored
+     * <br/>
+     *
+     * @param index int
+     */
+    public void removeMessage(int index) {
+        messageList.remove(index);
+        StringBuilder sBuilder = new StringBuilder();
+        for (String item : messageList) {
+            sBuilder.append(item).append("\t");
+        }
+        setMessage(sBuilder);
+    }
+
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        setBackgroundColor<br/>
+     * <br/>
+     * set background color for message
+     * <br/>
+     *
+     * @param color int
+     */
+    public void setBackgroundColor(int color) {
         colorCode = color;
     }
 
-    public void setDuration(Duration duration){
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        setDuration<br/>
+     * <br/>
+     * Set duration for snackbar to hide.
+     * <br/>
+     *
+     * @param duration Duration
+     */
+    public void setDuration(Duration duration) {
         mDuration = Duration.getDuration(duration);
     }
 
-    public void setDuration(int duration){
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        setDuration<br/>
+     * <br/>
+     * Set duration for snackbar to hide.
+     * <br/>
+     *
+     * @param duration int in milliseconds
+     */
+    public void setDuration(int duration) {
         mDuration = duration;
     }
 
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        show<br/>
+     * <br/>
+     * Show snackbar
+     * <br/>
+     */
     public void show() {
         isShowing = true;
         parent.setVisibility(VISIBLE);
@@ -142,7 +278,15 @@ public class Snacky extends RelativeLayout {
         }
     }
 
-    public void hide(){
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        hide<br/>
+     * <br/>
+     * Hide snackbar
+     * <br/>
+     */
+    public void hide() {
         if (isShowing) {
             isShowing = false;
             handler.removeCallbacks(runnable);
@@ -150,16 +294,47 @@ public class Snacky extends RelativeLayout {
         }
     }
 
-    public void type(Type type){
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        type<br/>
+     * <br/>
+     * Set type of snackbar
+     * <br/>
+     *
+     * @param type Type
+     */
+    public void type(Type type) {
         colorCode = Type.getColorCode(type);
         parent.setBackgroundColor(colorCode);
     }
 
-    public void attach(ViewGroup rootView){
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        attach<br/>
+     * <br/>
+     * Attached snackbar to rootview. <b>Note make sure you attached snackbar in order to for snackbar to be displayed.</b><br>
+     * e.g. <b>(ViewGroup) findViewById(android.R.id.content)</b>
+     * <br/>
+     *
+     * @param rootView ViewGroup
+     */
+    public void attach(ViewGroup rootView) {
         rootView.addView(mView);
     }
 
-    public boolean isShowing(){
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        isShowing<br/>
+     * <br/>
+     * Check if snackbar is showing
+     * <br/>
+     *
+     * @return boolean
+     */
+    public boolean isShowing() {
         return isShowing;
     }
 }
