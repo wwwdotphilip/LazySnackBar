@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,7 @@ public class Snacky extends RelativeLayout {
 
     private Action mAction;
     private boolean isShowing = false;
+    private boolean isAttached = false;
 
     private Handler handler;
     private Runnable runnable;
@@ -98,6 +100,7 @@ public class Snacky extends RelativeLayout {
         });
 
         if (viewGroup != null) {
+            isAttached = true;
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(parent.getLayoutParams());
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             parent.setLayoutParams(params);
@@ -306,12 +309,16 @@ public class Snacky extends RelativeLayout {
      * <br/>
      */
     public void show() {
-        isShowing = true;
-        parent.setVisibility(VISIBLE);
-        mView.animate().alpha(1.0f).setDuration(mSpeed).translationY(0).start();
-        if (mDuration > 0) {
-            handler.removeCallbacks(runnable);
-            handler.postDelayed(runnable, mDuration);
+        if (isAttached) {
+            isShowing = true;
+            parent.setVisibility(VISIBLE);
+            mView.animate().alpha(1.0f).setDuration(mSpeed).translationY(0).start();
+            if (mDuration > 0) {
+                handler.removeCallbacks(runnable);
+                handler.postDelayed(runnable, mDuration);
+            }
+        } else {
+            Log.e("Snacky", "Snacky is not attached to any rootView. Please call attach()");
         }
     }
 
@@ -358,6 +365,7 @@ public class Snacky extends RelativeLayout {
      * @param rootView ViewGroup
      */
     public void attach(ViewGroup rootView) {
+        isAttached = true;
         rootView.addView(mView);
     }
 
