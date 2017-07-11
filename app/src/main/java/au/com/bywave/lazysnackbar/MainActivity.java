@@ -25,9 +25,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Button pressed", Toast.LENGTH_LONG).show();
             }
         });
-        snacky.type(Type.UPDATE);
+        snacky.setSlideSpeed(200);
+        snacky.type(Type.SUCCESS);
         snacky.setDuration(Duration.SHORT);
         snacky.addMessage("The quick brown fox jumps over the lazy dog.");
+        snacky.addMessage("This is another text for testing");
         snacky.show();
     }
 

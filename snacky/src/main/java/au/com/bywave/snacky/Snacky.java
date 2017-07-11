@@ -27,6 +27,7 @@ public class Snacky extends RelativeLayout {
 
     private int mDuration = Duration.getDuration(Duration.SHORT);
     private int colorCode = Type.getColorCode(Type.SUCCESS);
+    private int mSpeed = 500;
 
     private Action mAction;
     private boolean isShowing = false;
@@ -91,6 +92,7 @@ public class Snacky extends RelativeLayout {
             public void onClick(View v) {
                 if (mAction != null) {
                     mAction.onClick();
+                    hide();
                 }
             }
         });
@@ -110,7 +112,7 @@ public class Snacky extends RelativeLayout {
             }
         };
 
-        mView.animate().setDuration(0).translationY(65).start();
+        mView.animate().alpha(0.0f).setDuration(0).translationY(80).start();
     }
 
     /**
@@ -162,7 +164,28 @@ public class Snacky extends RelativeLayout {
         messageList.add(message);
         StringBuilder sBuilder = new StringBuilder();
         for (String item : messageList) {
-            sBuilder.append(item).append("\t");
+            sBuilder.append(item).append("\t\t\t");
+        }
+        setMessage(sBuilder);
+    }
+
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        addMessage<br/>
+     * <br/>
+     * Add message to be displayed
+     * <br/>
+     *
+     * @param messages ArrayList
+     */
+    public void addMessage(ArrayList<String> messages){
+        for (String item : messages) {
+            messageList.add(item);
+        }
+        StringBuilder sBuilder = new StringBuilder();
+        for (String item : messageList) {
+            sBuilder.append(item).append("\t\t\t");
         }
         setMessage(sBuilder);
     }
@@ -263,6 +286,20 @@ public class Snacky extends RelativeLayout {
     /**
      * DEVELOPER:       John<br/>
      * LAST MODIFIED:   7/11/2017<br/>
+     * IN CLASS:        setSlideSpeed<br/>
+     * <br/>
+     * Set how fast snackbar will slide
+     * <br/>
+
+     * @param speed int milliseconds
+     */
+    public void setSlideSpeed(int speed){
+        mSpeed = speed;
+    }
+
+    /**
+     * DEVELOPER:       John<br/>
+     * LAST MODIFIED:   7/11/2017<br/>
      * IN CLASS:        show<br/>
      * <br/>
      * Show snackbar
@@ -271,7 +308,7 @@ public class Snacky extends RelativeLayout {
     public void show() {
         isShowing = true;
         parent.setVisibility(VISIBLE);
-        mView.animate().setDuration(500).translationY(0).start();
+        mView.animate().alpha(1.0f).setDuration(mSpeed).translationY(0).start();
         if (mDuration > 0) {
             handler.removeCallbacks(runnable);
             handler.postDelayed(runnable, mDuration);
@@ -290,7 +327,7 @@ public class Snacky extends RelativeLayout {
         if (isShowing) {
             isShowing = false;
             handler.removeCallbacks(runnable);
-            mView.animate().setDuration(500).translationY(65).start();
+            mView.animate().alpha(0.0f).setDuration(mSpeed).translationY(80).start();
         }
     }
 
